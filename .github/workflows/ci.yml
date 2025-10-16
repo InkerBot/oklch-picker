@@ -49,21 +49,11 @@ jobs:
         run: pnpm install --production --ignore-scripts
       - name: Build OKLCH
         run: node --run build
-      - name: Deploy OKLCH
-        uses: FirebaseExtended/action-hosting-deploy@e2eda2e106cfa35cdbcf4ac9ddaf6c4756df2c8c # v0.10.0
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload static files as artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_OKLCH_ACCOUNT }}'
-          projectId: ai-oklch
-          channelId: live
-      - name: Clean build dir
-        run: node --run clean
-      - name: Build LCH
-        run: node --run build:lch
-      - name: Deploy LCH
-        uses: FirebaseExtended/action-hosting-deploy@e2eda2e106cfa35cdbcf4ac9ddaf6c4756df2c8c # v0.10.0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_LCH_ACCOUNT }}'
-          projectId: ai-lch
-          channelId: live
+          path: dist/
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
