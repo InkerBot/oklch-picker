@@ -4,6 +4,7 @@ import vitePluginPug from 'vite-plugin-pug-transformer'
 import config from './config.js'
 
 export default defineConfig({
+  base: '/oklch-picker/',
   build: {
     assetsDir: '.',
     rollupOptions: {
