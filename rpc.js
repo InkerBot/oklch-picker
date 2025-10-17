@@ -22,7 +22,7 @@ window.addEventListener('message', (event) => {
       break;
     case 'set_color':
       setCurrent(event.data.color, true);
-      if (event.data.alpha) {
+      if (event.data.alpha !== undefined) {
         current.setKey('a', event.data.alpha * 100)
       }
       break;
