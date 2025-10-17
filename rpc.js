@@ -3,6 +3,12 @@ import { formatHex } from 'culori/fn'
 import { inRGB, toRgb } from './lib/colors.js'
 import { onCurrentChange, setCurrent, valueToColor } from './stores/current.js'
 
+setInterval(() => {
+  if (!window.opener || window.opener.closed) {
+    window.close()
+  }
+}, 500);
+
 window.addEventListener('message', (event) => {
   if (!event.data || !event.data.oklch_picker) {
     return
