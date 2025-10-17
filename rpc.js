@@ -3,6 +3,8 @@ import { formatHex } from 'culori/fn'
 import { inRGB, toRgb } from './lib/colors.js'
 import { current, onCurrentChange, setCurrent, valueToColor } from './stores/current.js'
 
+let isHanding = false;
+
 setInterval(() => {
   if (!window.opener || window.opener.closed) {
     // close
@@ -22,9 +24,14 @@ window.addEventListener('message', (event) => {
       }, '*');
       break;
     case 'set_color':
-      setCurrent(event.data.color, true);
-      if (event.data.alpha !== undefined) {
-        current.setKey('a', event.data.alpha * 100)
+      isHanding = true;
+      try {
+        setCurrent(event.data.color, true);
+        if (event.data.alpha !== undefined) {
+          current.setKey('a', event.data.alpha * 100)
+        }
+      } finally {
+        isHanding = false;
       }
       break;
   }
@@ -32,6 +39,8 @@ window.addEventListener('message', (event) => {
 
 onCurrentChange({
   alpha(value) {
+    if (isHanding) return
+
     let color = valueToColor(current.get())
     let rgbColor = inRGB(color) ? color : toRgb(color)
     let hex = formatHex(rgbColor)
@@ -44,6 +53,8 @@ onCurrentChange({
     }, '*');
   },
   lch(value) {
+    if (isHanding) return
+
     let color = valueToColor(value)
     let rgbColor = inRGB(color) ? color : toRgb(color)
     let hex = formatHex(rgbColor)
