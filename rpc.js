@@ -5,6 +5,7 @@ import { current, onCurrentChange, setCurrent, valueToColor } from './stores/cur
 
 setInterval(() => {
   if (!window.opener || window.opener.closed) {
+    // close
     window.close()
   }
 }, 500);
@@ -30,6 +31,18 @@ window.addEventListener('message', (event) => {
 })
 
 onCurrentChange({
+  alpha(value) {
+    let color = valueToColor(current.get())
+    let rgbColor = inRGB(color) ? color : toRgb(color)
+    let hex = formatHex(rgbColor)
+
+    window.opener.postMessage({
+      alpha: value / 100,
+      color: hex,
+      oklch_picker: true,
+      type: 'color_change'
+    }, '*');
+  },
   lch(value) {
     let color = valueToColor(value)
     let rgbColor = inRGB(color) ? color : toRgb(color)
