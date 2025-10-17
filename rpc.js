@@ -14,6 +14,12 @@ window.addEventListener('message', (event) => {
     return
   }
   switch (event.data.type) {
+    case 'handshake':
+      window.opener.postMessage({
+        oklch_picker: true,
+        type: 'handshake_response'
+      }, '*');
+      break;
     case 'set_color':
       setCurrent(event.data.color, true);
       break;
