@@ -1,7 +1,7 @@
 import { formatHex } from 'culori/fn'
 
 import { inRGB, toRgb } from './lib/colors.js'
-import { onCurrentChange, setCurrent, valueToColor } from './stores/current.js'
+import { current, onCurrentChange, setCurrent, valueToColor } from './stores/current.js'
 
 setInterval(() => {
   if (!window.opener || window.opener.closed) {
@@ -22,6 +22,9 @@ window.addEventListener('message', (event) => {
       break;
     case 'set_color':
       setCurrent(event.data.color, true);
+      if (event.data.alpha) {
+        current.setKey('a', event.data.alpha * 100)
+      }
       break;
   }
 })
@@ -33,6 +36,7 @@ onCurrentChange({
     let hex = formatHex(rgbColor)
 
     window.opener.postMessage({
+      alpha: rgbColor.alpha ?? 1,
       color: hex,
       oklch_picker: true,
       type: 'color_change'
